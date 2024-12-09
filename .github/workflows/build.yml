@@ -28,8 +28,6 @@ env:
   # 服务端口
   PROJECT_PORT: 8080
   CONTAINER_NAME: alyzers
-  # 项目类型
-  PROJECT_TYPE: node
   # 镜像仓库名 + 新增
   IMAGE_REPO_NAME: ghcr.io/alyzers
   # NAMESPACE
@@ -63,7 +61,7 @@ jobs:
 
   render template:
     runs-on: ubuntu-latest
-    needs: [Build-Code-Actions]
+    needs: [build code actions]
     steps:
       - uses: actions/checkout@v4
       - name: Render Template
@@ -73,7 +71,7 @@ jobs:
         run: |
           mkdir deploy
 
-          BUILD_TIME=${{ needs.Build-Code-Actions.outputs.build_time }}
+          BUILD_TIME=${{ needs.build code actions.outputs.build_time }}
           IMAGE_NAME=${IMAGE_REPO_NAME}/${SERVICE_NAME}:$(git rev-parse --short HEAD)_$BUILD_TIME
           echo "Image name: $IMAGE_NAME"
 
@@ -108,8 +106,8 @@ jobs:
   deploy action:
     runs-on: ubuntu-latest
     needs:
-      - Build-Code-Actions
-      - RENDER-TEMPLATE-ACTIONS
+      - build code actions
+      - render template
 
     steps:
       - name: Download artifact
